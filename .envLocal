@@ -1,0 +1,8 @@
+## Database
+DB_HOST=mongodb://mongodb:27017/notelyDB
+
+## Authentication
+JWT_SECRET=supersecret
+
+## API
+API_PORT=8080

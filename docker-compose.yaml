@@ -1,0 +1,36 @@
+version: '3.2'
+
+services:
+
+  mongodb:
+    image: 'bitnami/mongodb:4.2'
+    restart: always
+    volumes:
+      - './mongodb_master_data:/bitnami:rw'
+    ports:
+      - '27017:27017'
+
+  api:
+    restart: always
+    build:
+      context: api-tmp
+      dockerfile: api/Dockerfile.dev
+    image: notely_api_nodejs:latest
+    container_name: notely_api_container
+    command: ["npm", "run", "dev"]
+    environment:
+      - DB_HOST=${DB_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_PORT=${API_PORT}
+    working_dir: '/usr/src/app'
+    links:
+      - mongodb
+    volumes:
+      - ./api-tmp/.:/usr/src/app
+      - '/usr/src/app/node_modules'
+    ports:
+      - '8080:8080'
+
+volumes:
+  mongodb_master_data:
+    driver: local
